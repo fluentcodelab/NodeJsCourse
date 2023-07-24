@@ -116,3 +116,4 @@ dist
 .pnp.*
 express-demo/.idea
 vidly/.idea
+async-demo/.idea
