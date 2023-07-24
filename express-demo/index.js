@@ -1,83 +1,11 @@
-import Joi from "joi";
 import express from "express";
+import courses from "./routes/courses.js";
+import home from "./routes/home.js";
 
 const app = express();
 app.use(express.json()); // Adds middleware that turns request body in json objects
-
-const courses = [
-  { id: 1, name: "Course A" },
-  { id: 2, name: "Course B" },
-  { id: 3, name: "Course C" },
-];
-
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-app.get("/api/courses", (req, res) => {
-  res.send(courses);
-});
-
-app.post("/api/courses", (req, res) => {
-  const { error } = validateCourse(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  const course = {
-    id: courses.length + 1,
-    name: req.body.name,
-  };
-  courses.push(course);
-  res.status(201).send(course);
-});
-
-app.get("/api/courses/:id", (req, res) => {
-  const course = courses.find((x) => x.id === parseInt(req.params.id));
-  if (!course)
-    return res
-      .status(404)
-      .send(`No match found for course with ID ${req.params.id}`);
-  res.send(course);
-});
-
-app.put("/api/courses/:id", (req, res) => {
-  const course = courses.find((x) => x.id === parseInt(req.params.id));
-  if (!course)
-    return res
-      .status(404)
-      .send(`No match found for course with ID ${req.params.id}`);
-
-  const { error } = validateCourse(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  course.name = req.body.name;
-
-  res.send(course);
-});
-
-app.delete("/api/courses/:id", (req, res) => {
-  const course = courses.find((x) => x.id === parseInt(req.params.id));
-  if (!course)
-    return res
-      .status(404)
-      .send(`No match found for course with ID ${req.params.id}`);
-
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
-
-  res.send(course);
-});
-
-function validateCourse(course) {
-  const schema = {
-    name: Joi.string().min(3).required(),
-  };
-
-  return Joi.validate(course, schema);
-}
+app.use("/", home);
+app.use("/api/courses", courses);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
