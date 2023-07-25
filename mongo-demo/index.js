@@ -27,12 +27,16 @@ async function createCourse() {
 }
 
 async function getCourses() {
-    const count = await Course
+    const pageNumber = 1;
+    const pageSize = 10;
+
+    const courses = await Course
         .find({author: 'Mosh', isPublished: true})
-        .limit(10)
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
         .sort({name: 1})
         .count();
-    console.log(count);
+    console.log(courses);
 }
 
 getCourses();
