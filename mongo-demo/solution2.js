@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+/*
+* Requirements
+*
+* Get all the published frontend and backend courses,
+* sort them by their price in descending order,
+* pick only their name, author and price,
+* and display them.
+*
+* */
+
 mongoose.connect('mongodb://127.0.0.1:27017/mongo-exercises')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
