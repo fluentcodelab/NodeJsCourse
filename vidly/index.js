@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import express from "express";
 import genres from "./routes/genres.js";
+import customers from "./routes/customers.js";
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/vidly")
@@ -10,6 +11,7 @@ mongoose
 const app = express();
 app.use(express.json()); // Adds middleware that turns request body in json objects
 app.use("/api/genres", genres);
+app.use("/api/customers", customers);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
