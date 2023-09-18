@@ -49,4 +49,9 @@ async function updateCourse(id) {
     console.log(course);
 }
 
-updateCourse('6507a6fdfd92b7b8146af240');
+async function removeCourse(id) {
+    const result = await Course.deleteOne({_id: id});
+    console.log(result);
+}
+
+removeCourse('6507a6fdfd92b7b8146af240');
