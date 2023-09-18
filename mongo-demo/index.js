@@ -5,7 +5,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/playground')
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 const courseSchema = mongoose.Schema({
-    name: String,
+    name: {type: String, required: true},
     author: String,
     tags: [String],
     date: {type: Date, default: Date.now()},
@@ -16,14 +16,18 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
     const course = new Course({
-        name: 'Angular Course',
+        // name: 'Angular Course',
         author: 'Mosh',
         tags: ['angular', 'frontend'],
         isPublished: true
     });
 
-    const result = await course.save();
-    console.log(result);
+    try {
+        const result = await course.save();
+        console.log(result);
+    } catch (e) {
+        console.log(e.message); // Course validation failed: name: Path `name` is required.
+    }
 }
 
 async function getCourses() {
@@ -54,4 +58,4 @@ async function removeCourse(id) {
     console.log(result);
 }
 
-removeCourse('6507a6fdfd92b7b8146af240');
+createCourse();
