@@ -5,28 +5,47 @@ mongoose.connect('mongodb://127.0.0.1:27017/playground')
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 const courseSchema = mongoose.Schema({
-    name: {type: String, required: true},
+    name: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 255,
+        // match: /pattern/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: [`web`, `mobile`, `network`]
+    },
     author: String,
     tags: [String],
     date: {type: Date, default: Date.now()},
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function () { return this.isPublished; },
+        min: 10,
+        max: 200
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
     const course = new Course({
-        // name: 'Angular Course',
+        name: 'Angular Course',
+        category: `finance`,
         author: 'Mosh',
         tags: ['angular', 'frontend'],
-        isPublished: true
+        isPublished: true,
+        price: 20
     });
 
     try {
         const result = await course.save();
         console.log(result);
     } catch (e) {
-        console.log(e.message); // Course validation failed: name: Path `name` is required.
+        console.log(e.message); // Course validation failed: category: `finance` is not a valid enum value for path `category`.
     }
 }
 
