@@ -18,7 +18,15 @@ const courseSchema = mongoose.Schema({
         enum: [`web`, `mobile`, `network`]
     },
     author: String,
-    tags: [String],
+    tags: {
+        type: Array,
+        validate: {
+            validator: function (v) {
+                return v && v.length > 0;
+            },
+            message: `A course should have at least one tag.`
+        }
+    },
     date: {type: Date, default: Date.now()},
     isPublished: Boolean,
     price: {
@@ -34,9 +42,9 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     const course = new Course({
         name: 'Angular Course',
-        category: `finance`,
+        category: `web`,
         author: 'Mosh',
-        tags: ['angular', 'frontend'],
+        tags: [],
         isPublished: true,
         price: 20
     });
@@ -45,7 +53,7 @@ async function createCourse() {
         const result = await course.save();
         console.log(result);
     } catch (e) {
-        console.log(e.message); // Course validation failed: category: `finance` is not a valid enum value for path `category`.
+        console.log(e.message); // Course validation failed: tags: A course should have at least one tag.
     }
 }
 
