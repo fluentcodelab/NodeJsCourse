@@ -1,7 +1,11 @@
 import express from "express";
+import mongoose from "mongoose";
+import Fawn from "fawn";
 import { Rental, validate } from "../models/rental.js";
 import { Customer } from "../models/customer.js";
 import { Movie } from "../models/movie.js";
+
+Fawn.init(mongoose);
 
 const router = express.Router();
 
@@ -35,12 +39,19 @@ router.post("/", async (req, res) => {
       dailyRentalRate: movie.dailyRentalRate,
     },
   });
-  rental = await rental.save();
 
-  movie.numberInStock--;
-  movie.save();
+  // Fawn is a library that implements the 'Two Phase Commits' of MongoDB to handle transactions
+  // https://www.mongodb.com/docs/v2.2/tutorial/perform-two-phase-commits/
+  try {
+    new Fawn.Task()
+      .save("rentals", rental)
+      .update("movies", { _id: movie._id }, { $inc: { numberInStock: -1 } })
+      .run();
 
-  res.send(rental);
+    res.send(rental);
+  } catch (e) {
+    res.status(500).send("Something failed.");
+  }
 });
 
 router.get("/:id", async (req, res) => {
