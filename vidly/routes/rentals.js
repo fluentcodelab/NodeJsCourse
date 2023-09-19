@@ -5,7 +5,7 @@ import { Rental, validate } from "../models/rental.js";
 import { Customer } from "../models/customer.js";
 import { Movie } from "../models/movie.js";
 
-Fawn.init(mongoose);
+Fawn.init("mongodb://127.0.0.1:27017/vidly");
 
 const router = express.Router();
 
