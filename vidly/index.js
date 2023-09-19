@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 import express from "express";
+import Joi from "joi";
+import objectId from "joi-objectid";
 import genres from "./routes/genres.js";
 import customers from "./routes/customers.js";
 import movies from "./routes/movies.js";
 import rentals from "./routes/rentals.js";
+
+Joi.objectId = objectId(Joi);
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/vidly")
