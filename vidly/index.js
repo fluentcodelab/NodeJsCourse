@@ -1,3 +1,4 @@
+import "express-async-errors";
 import mongoose from "mongoose";
 import express from "express";
 import Joi from "joi";

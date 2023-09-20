@@ -2,21 +2,17 @@ import express from "express";
 import { Genre, validate } from "../models/genre.js";
 import { auth } from "../middleware/auth.js";
 import { admin } from "../middleware/admin.js";
-import { asyncMiddleware } from "../middleware/async.js";
 
 const router = express.Router();
 
-router.get(
-  "/",
-  asyncMiddleware(async (req, res, next) => {
-    try {
-      const genres = await Genre.find().sort("name");
-      res.send(genres);
-    } catch (e) {
-      next(e);
-    }
-  }),
-);
+router.get("/", async (req, res, next) => {
+  try {
+    const genres = await Genre.find().sort("name");
+    res.send(genres);
+  } catch (e) {
+    next(e);
+  }
+});
 
 router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
