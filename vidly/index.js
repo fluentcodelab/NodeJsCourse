@@ -3,6 +3,7 @@ import express from "express";
 import Joi from "joi";
 import objectId from "joi-objectid";
 import config from "config";
+import { error } from "./middleware/error.js";
 import genres from "./routes/genres.js";
 import customers from "./routes/customers.js";
 import movies from "./routes/movies.js";
@@ -30,6 +31,7 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
