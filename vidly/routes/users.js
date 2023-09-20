@@ -1,7 +1,9 @@
 import _ from "lodash";
 import express from "express";
-import { User, validate } from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import config from "config";
+import { User, validate } from "../models/user.js";
 
 const router = express.Router();
 
@@ -18,7 +20,11 @@ router.post("/", async (req, res) => {
 
   await user.save();
 
-  res.send(_.pick(user, ["_id", "name", "email"]));
+  const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
+
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(user, ["_id", "name", "email"]));
 });
 
 export default router;
