@@ -30,10 +30,23 @@ const logger = createLogger({
   ],
 });
 
-process.on("uncaughtException", (e) => {
-  console.log("WE GOT AN UNCAUGHT EXCEPTION.");
-  logger.error(e.message, e);
+// process.on("uncaughtException", (e) => {
+//   logger.error(e.message, e);
+//   process.exit(1);
+// });
+
+logger.exceptions.handle(
+  new transports.File({ filename: "uncaughtException.log" }),
+);
+
+process.on("unhandledRejection", (e) => {
+  // logger.error(e.message, e);
+  // process.exit(1);
+  throw e;
 });
+
+const p = Promise.reject(new Error("Something failed terribly..."));
+p.then(() => console.log("Done"));
 
 if (!config.get("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
