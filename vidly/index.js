@@ -2,12 +2,18 @@ import mongoose from "mongoose";
 import express from "express";
 import Joi from "joi";
 import objectId from "joi-objectid";
+import config from "config";
 import genres from "./routes/genres.js";
 import customers from "./routes/customers.js";
 import movies from "./routes/movies.js";
 import rentals from "./routes/rentals.js";
 import users from "./routes/users.js";
 import auth from "./routes/auth.js";
+
+if (!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR: jwtPrivateKey is not defined.");
+  process.exit(1);
+}
 
 Joi.objectId = objectId(Joi);
 
