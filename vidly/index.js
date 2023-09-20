@@ -1,3 +1,5 @@
+import "winston-mongodb";
+import { createLogger, format, transports } from "winston";
 import "express-async-errors";
 import mongoose from "mongoose";
 import express from "express";
@@ -11,6 +13,27 @@ import movies from "./routes/movies.js";
 import rentals from "./routes/rentals.js";
 import users from "./routes/users.js";
 import auth from "./routes/auth.js";
+
+const { combine, timestamp, label, prettyPrint } = format;
+const logger = createLogger({
+  format: combine(
+    timestamp({
+      format: "MMM-DD-YYYY HH:mm:ssZ",
+    }),
+    prettyPrint(),
+    format.metadata(),
+  ),
+  transports: [
+    new transports.Console(),
+    new transports.File({ filename: "error.log", level: "error" }),
+    new transports.MongoDB({ db: "mongodb://127.0.0.1:27017/vidly" }),
+  ],
+});
+
+process.on("uncaughtException", (e) => {
+  console.log("WE GOT AN UNCAUGHT EXCEPTION.");
+  logger.error(e.message, e);
+});
 
 if (!config.get("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
