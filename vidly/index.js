@@ -1,18 +1,16 @@
 import "express-async-errors";
 import express from "express";
-import Joi from "joi";
-import objectId from "joi-objectid";
-import "./startup/logging.js";
+import { logger } from "./startup/logging.js";
 import { setConfig } from "./startup/config.js";
 import { routes } from "./startup/routes.js";
 import { db } from "./startup/db.js";
+import { setValidation } from "./startup/validation.js";
 
 const app = express();
 routes(app);
 db();
 setConfig();
-
-Joi.objectId = objectId(Joi);
+setValidation();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+app.listen(port, () => logger.info(`Listening on port ${port}...`));
