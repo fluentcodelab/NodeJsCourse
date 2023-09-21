@@ -1,4 +1,3 @@
-import "express-async-errors";
 import express from "express";
 import { logger } from "./startup/logging.js";
 import { setConfig } from "./startup/config.js";

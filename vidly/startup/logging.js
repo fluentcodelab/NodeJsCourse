@@ -1,3 +1,4 @@
+import "express-async-errors";
 import "winston-mongodb";
 import { createLogger, format, transports } from "winston";
 
