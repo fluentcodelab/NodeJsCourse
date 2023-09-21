@@ -7,7 +7,7 @@ import users from "../routes/users.js";
 import auth from "../routes/auth.js";
 import { error } from "../middleware/error.js";
 
-export function loadRoutes(app) {
+export function routes(app) {
   app.use(express.json()); // Adds middleware that turns request body in json objects
   app.use("/api/genres", genres);
   app.use("/api/customers", customers);
