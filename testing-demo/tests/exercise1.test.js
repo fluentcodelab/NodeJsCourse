@@ -22,7 +22,7 @@ describe(`fizzBuzz`, () => {
         expect(result).toBe(`Buzz`);
     });
 
-    it(`should return input if it is only divisible by 3 or 5`, () => {
+    it(`should return input if it is not divisible by 3 or 5`, () => {
         const result = lib.fizzBuzz(1);
         expect(result).toBe(1);
     });
