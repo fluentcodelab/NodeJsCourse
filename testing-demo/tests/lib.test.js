@@ -18,32 +18,41 @@ describe(`absolute`, () => {
 });
 
 describe(`greet`, () => {
-   it(`should return the greeting message`, () => {
-       const result = lib.greet(`John Doe`);
-       expect(result).toMatch(/Welcome John Doe/);
-   });
+    it(`should return the greeting message`, () => {
+        const result = lib.greet(`John Doe`);
+        expect(result).toMatch(/Welcome John Doe/);
+    });
 });
 
 describe(`getCurrencies`, () => {
-   it(`should return supported currencies`, () => {
-       const result = lib.getCurrencies();
+    it(`should return supported currencies`, () => {
+        const result = lib.getCurrencies();
 
-       // Too general
-       expect(result).toBeDefined();
-       expect(result).not.toBeNull();
+        // Too general
+        expect(result).toBeDefined();
+        expect(result).not.toBeNull();
 
-       // Too specific
-       expect(result[0]).toBe(`USD`);
-       expect(result[1]).toBe(`AUD`);
-       expect(result[2]).toBe(`EUR`);
-       expect(result.length).toBe(3);
+        // Too specific
+        expect(result[0]).toBe(`USD`);
+        expect(result[1]).toBe(`AUD`);
+        expect(result[2]).toBe(`EUR`);
+        expect(result.length).toBe(3);
 
-       // Proper way
-       expect(result[0]).toContain(`USD`);
-       expect(result[1]).toContain(`AUD`);
-       expect(result[2]).toContain(`EUR`);
+        // Proper way
+        expect(result[0]).toContain(`USD`);
+        expect(result[1]).toContain(`AUD`);
+        expect(result[2]).toContain(`EUR`);
 
-       // Ideal way
-       expect(result).toEqual(expect.arrayContaining([`EUR`, `USD`, `AUD`]));
-   });
+        // Ideal way
+        expect(result).toEqual(expect.arrayContaining([`EUR`, `USD`, `AUD`]));
+    });
+});
+
+describe(`getProduct`, () => {
+    it(`should return the product with the given id`, () => {
+        const result = lib.getProduct(1);
+        expect(result).toEqual({id: 1, price: 10});
+        expect(result).toMatchObject({id: 1, price: 10});
+        expect(result).toHaveProperty(`id`, 1);
+    })
 });
