@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import { logger } from "./logging.js";
+import config from "config";
 
 export function db() {
+  const db = config.get("db");
   mongoose
-    .connect("mongodb://127.0.0.1:27017/vidly", { useUnifiedTopology: true })
-    .then(() => logger.info("Connected to MongoDB..."));
+    .connect(db, { useUnifiedTopology: true })
+    .then(() => logger.info(`Connected to ${db}...`));
 }
