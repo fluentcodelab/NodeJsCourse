@@ -2,6 +2,7 @@ import express from "express";
 import { Genre, validate } from "../models/genre.js";
 import { auth } from "../middleware/auth.js";
 import { admin } from "../middleware/admin.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -45,6 +46,9 @@ router.delete("/:id", [auth, admin], async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id))
+    return res.status(404).send(`Invalid ID.`);
+
   const genre = await Genre.findById(req.params.id);
   if (!genre)
     return res.status(404).send("The genre with the given ID was not found.");
