@@ -12,4 +12,6 @@ setConfig();
 setValidation();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => logger.info(`Listening on port ${port}...`));
+export const server = app.listen(port, () =>
+  logger.info(`Listening on port ${port}...`),
+);
