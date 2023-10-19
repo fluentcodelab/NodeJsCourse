@@ -8,3 +8,6 @@ _id: 65090f387e844eaae1d1d8ca
 - 3 bytes: counter
 
 For complex password enforcement, we can use the package joi-password-complexity
+
+New feature to implement: Returning a rental  
+API route will be: POST /api/returns with payload {customerId, movieId}
