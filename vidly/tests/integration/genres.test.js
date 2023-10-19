@@ -2,6 +2,7 @@ import request from "supertest";
 import { server } from "../../index";
 import { Genre } from "../../models/genre.js";
 import { User } from "../../models/user.js";
+import mongoose from "mongoose";
 
 let serverInstance;
 
@@ -43,6 +44,13 @@ describe(`/api/genres`, () => {
 
     it(`should return 404 if invalid id is passed`, async () => {
       const res = await request(serverInstance).get(`/api/genres/1`);
+
+      expect(res.status).toBe(404);
+    });
+
+    it(`should return 404 if no genre with the given id exists`, async () => {
+      const id = new mongoose.Types.ObjectId();
+      const res = await request(serverInstance).get(`/api/genres/${id}`);
 
       expect(res.status).toBe(404);
     });
