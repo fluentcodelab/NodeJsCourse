@@ -2,6 +2,7 @@ import express from "express";
 import { auth } from "../middleware/auth.js";
 import { Rental } from "../models/rental.js";
 import moment from "moment";
+import { Movie } from "../models/movie.js";
 
 const router = express.Router();
 
@@ -23,6 +24,13 @@ router.post("/", auth, async (req, res, next) => {
   const rentalDays = moment().diff(rental.dateOut, `days`);
   rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
   await rental.save();
+
+  await Movie.updateOne(
+    { _id: rental.movie._id },
+    {
+      $inc: { numberInStock: 1 },
+    },
+  );
 
   return res.status(200).send();
 });
