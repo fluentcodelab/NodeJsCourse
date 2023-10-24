@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import moment from "moment";
 import Joi from "joi";
 import objectId from "joi-objectid";
 
@@ -58,11 +59,20 @@ const rentalSchema = new mongoose.Schema({
   },
 });
 
+// Static method
 rentalSchema.statics.lookup = function (customerId, movieId) {
   return this.findOne({
     "customer._id": customerId,
     "movie._id": movieId,
   });
+};
+
+// Instance method
+rentalSchema.methods.return = function () {
+  this.dateReturned = new Date();
+
+  const rentalDays = moment().diff(this.dateOut, `days`);
+  this.rentalFee = rentalDays * this.movie.dailyRentalRate;
 };
 
 export const Rental = mongoose.model("Rental", rentalSchema);
