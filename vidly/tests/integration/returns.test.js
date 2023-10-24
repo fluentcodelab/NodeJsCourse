@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { server } from "../../index.js";
 import { Rental } from "../../models/rental.js";
+import { User } from "../../models/user.js";
 
 describe("/api/returns", () => {
   let serverInstance;
@@ -39,5 +40,27 @@ describe("/api/returns", () => {
       .send({ customerId, movieId });
 
     expect(res.status).toBe(401);
+  });
+
+  it("should return 400 if customerId is not provided", async () => {
+    const token = new User().generateAuthToken();
+
+    const res = await request(serverInstance)
+      .post("/api/returns")
+      .set(`x-auth-token`, token)
+      .send({ movieId });
+
+    expect(res.status).toBe(400);
+  });
+
+  it("should return 400 if movieId is not provided", async () => {
+    const token = new User().generateAuthToken();
+
+    const res = await request(serverInstance)
+      .post("/api/returns")
+      .set(`x-auth-token`, token)
+      .send({ customerId });
+
+    expect(res.status).toBe(400);
   });
 });
