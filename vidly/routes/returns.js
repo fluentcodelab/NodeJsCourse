@@ -1,6 +1,7 @@
 import express from "express";
 import { auth } from "../middleware/auth.js";
 import { Rental } from "../models/rental.js";
+import moment from "moment";
 
 const router = express.Router();
 
@@ -19,6 +20,8 @@ router.post("/", auth, async (req, res, next) => {
     return res.status(400).send(`Return already processed.`);
 
   rental.dateReturned = new Date();
+  const rentalDays = moment().diff(rental.dateOut, `days`);
+  rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
   await rental.save();
 
   return res.status(200).send();
