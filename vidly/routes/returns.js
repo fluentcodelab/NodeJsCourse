@@ -1,16 +1,14 @@
 import express from "express";
-import { auth } from "../middleware/auth.js";
-import { Rental } from "../models/rental.js";
 import moment from "moment";
+import Joi from "joi";
+import { auth } from "../middleware/auth.js";
+import { validate } from "../middleware/validate.js";
+import { Rental } from "../models/rental.js";
 import { Movie } from "../models/movie.js";
 
 const router = express.Router();
 
-router.post("/", auth, async (req, res, next) => {
-  if (!req.body.customerId)
-    return res.status(400).send(`customerId not provided.`);
-  if (!req.body.movieId) return res.status(400).send(`movieId not provided.`);
-
+router.post("/", [auth, validate(validateReturn)], async (req, res, next) => {
   const rental = await Rental.findOne({
     "customer._id": req.body.customerId,
     "movie._id": req.body.movieId,
@@ -34,5 +32,14 @@ router.post("/", auth, async (req, res, next) => {
 
   return res.status(200).send(rental);
 });
+
+function validateReturn(input) {
+  const schema = Joi.object({
+    customerId: Joi.objectId().required(),
+    movieId: Joi.objectId().required(),
+  });
+
+  return schema.validate(input);
+}
 
 export default router;

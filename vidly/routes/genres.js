@@ -1,7 +1,8 @@
 import express from "express";
-import { Genre, validate } from "../models/genre.js";
+import { Genre, validateGenre } from "../models/genre.js";
 import { auth } from "../middleware/auth.js";
 import { admin } from "../middleware/admin.js";
+import { validate } from "../middleware/validate.js";
 import { validateObjectId } from "../middleware/validateObjectId.js";
 
 const router = express.Router();
@@ -11,20 +12,14 @@ router.get("/", async (req, res, next) => {
   res.send(genres);
 });
 
-router.post("/", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
+router.post("/", [auth, validate(validateGenre)], async (req, res) => {
   const genre = new Genre({ name: req.body.name });
   await genre.save();
 
   res.send(genre);
 });
 
-router.put("/:id", async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
+router.put("/:id", [validate(validateGenre)], async (req, res) => {
   const genre = await Genre.findByIdAndUpdate(
     req.params.id,
     { name: req.body.name },
